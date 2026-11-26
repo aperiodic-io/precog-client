@@ -1,0 +1,12 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 97d2e367965c51072b1d8dbd3f14dffc824bd257c1c02b66c475e56ef69c53ba # shrinks to ops = [Send(1, [0, 16, 23, 7, 3]), Put(2, 210), Send(1, [23]), Send(1, [22, 20, 20]), Resume(293)]
+cc 2cdd4520526447a1d65c8823437bce761f4f6cc47eb449f8c196e866794f6d7e # shrinks to down = Some(1), ops = [Send(0, [13]), Join, Send(0, [13]), ReadAll]
+cc 539f089de36996ef093146bb54c1cda1c0f568e87e182bb4b3c5b38cae78f0e2 # shrinks to down = Some(2), ops = [Send(0, [0]), Resume(478), End, Send(0, [5, 4]), Send(0, [6, 1, 19]), Join, Send(0, [18, 3, 10, 6]), Send(0, [5, 2, 16, 20, 13]), Send(0, [19, 20, 1]), ReadAll, Send(1, [13, 4]), Resume(116), Resume(403), Resume(270), End, Put(2, 134), Put(0, 68), End, Send(1, [7, 5, 12]), End, Join, Send(1, [22, 18]), Resume(296)]
+cc 934fd37b3947e0e2b608118f42db9b859b1da9a36b5e7ecc937d67e2c518c74e # shrinks to down = Some(0), ops = [Resume(508), Join, ReadAll, Send(0, [10, 4, 7, 10]), Send(0, [19, 10]), Put(3, 115), ReadAll]
+cc b11be78bce8584267517a7b6c386d006e3de94b014577a85c32753907cfab834 # shrinks to down = None, sizes = [579, 1898209, 85], polls = 2
+cc 819a227a41ae7ebe0aa6b16ba807e589eaad5a1c3fd294f7579937db4311a877 # shrinks to down = Some(0), sizes = [1239, 303, 787, 1315338], polls = 3

@@ -1,0 +1,40 @@
+# Both clients against nodes of the published image (ghcr.io/aperiodic-io/precog), the commit
+# whose protocol they speak (`testkit::IMAGE`; the Go job uses the same image's binary).
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+env:
+  CARGO_TERM_COLOR: always
+  PRECOG_IMAGE: ghcr.io/aperiodic-io/precog:sha-6e1d62ed572d305122574e8161f961b827bb7713
+jobs:
+  rust:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      # rust-toolchain.toml names the toolchain; rustup installs it on first use
+      - run: rustup show active-toolchain || rustup toolchain install
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - run: docker pull -q "$PRECOG_IMAGE"
+      # the testkit runs the nodes with the host's network, each on a port of its own
+      - run: cargo test --all-features
+  go:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      # the image's node binary, built on Debian trixie: the tests run where it does
+      - run: |
+          id=$(docker create "$PRECOG_IMAGE")
+          docker cp "$id:/usr/local/bin/precog-node" "$RUNNER_TEMP/precog-node"
+          docker rm "$id"
+      - run: |
+          docker run --rm --network host -v "$PWD/go:/src" -w /src \
+            -v "$RUNNER_TEMP/precog-node:/usr/local/bin/precog-node:ro" \
+            -e PRECOG_NODE=/usr/local/bin/precog-node golang:1.24.7-trixie \
+            sh -c 'test -z "$(gofmt -l .)" && go vet ./... && go test -count=1 ./...'
