@@ -23,6 +23,14 @@ jobs:
       - run: docker pull -q "$PRECOG_IMAGE"
       # the testkit runs the nodes with the host's network, each on a port of its own
       - run: cargo test --all-features
+  # the oldest Rust the crate says it builds with (`rust-version`): the consumers' toolchains
+  msrv:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: rustup toolchain install 1.90.0 --profile minimal
+      - run: cargo +1.90.0 build --all-targets --all-features --locked
   go:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
