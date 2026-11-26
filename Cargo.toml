@@ -5,7 +5,7 @@ edition = "2024"
 license = "Apache-2.0"
 description = "Rust SDK for Precog: producers with dedup keys, readers with cursors valid on every node"
 repository = "https://github.com/aperiodic-io/precog-client"
-rust-version = "1.97"
+rust-version = "1.90"
 
 [dependencies]
 anyhow = "1"
